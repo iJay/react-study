@@ -32,10 +32,6 @@ function App() {
 
   const [num, dispatch] = useReducer(reducer, { result: 0})
 
-  // const [num1, setNum1] = useState(0)
-
-  // const ref = useRef()
-
   useEffect(() => {
     const timer = setInterval(() => {}, 1000)
     return () => {
@@ -77,6 +73,25 @@ function App() {
     }, 1000)
   }, [])
 
+
+  const [num1, setNum1] = useState(0)
+
+  const updateNum1 = () => {
+    setNum1(num1 + 1)
+  }
+
+  const ref = useRef(updateNum1)
+ 
+  // React文档中一般不推荐在渲染过程中直接读取或者修改ref.current
+  ref.current = updateNum1 // ref.current的改变不会触发重新渲染，他很适合保存渲染过程中的一些数据场景
+
+  useEffect(() => {
+    const timer = setInterval(() => ref.current(), 1000)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
   return (
     <>
       <div className="card">
@@ -87,6 +102,9 @@ function App() {
       </div>
       <div className="card">
         num: {num.result}
+      </div>
+      <div className="card">
+        num1: {num1}
       </div>
     </>
   )
